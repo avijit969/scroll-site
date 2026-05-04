@@ -9,6 +9,8 @@ export default function ScrollAnimation() {
     const [images, setImages] = useState<HTMLImageElement[]>([]);
     const [loadingProgress, setLoadingProgress] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
+    const [scrollY, setScrollY] = useState(0);
+    const [isMounted, setIsMounted] = useState(false);
 
     const frameCount = 960;
 
@@ -46,6 +48,10 @@ export default function ScrollAnimation() {
     }, []);
 
     useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
+    useEffect(() => {
         if (!canvasRef.current || images.length === 0) return;
 
         const canvas = canvasRef.current;
@@ -53,7 +59,8 @@ export default function ScrollAnimation() {
         if (!context) return;
 
         const handleScroll = () => {
-            const scrollTop = document.documentElement.scrollTop;
+            const scrollTop = window.scrollY;
+            setScrollY(scrollTop);
             const maxScrollTop = document.documentElement.scrollHeight - window.innerHeight;
             const scrollFraction = scrollTop / maxScrollTop;
             const frameIndex = Math.min(
@@ -106,71 +113,71 @@ export default function ScrollAnimation() {
             )}
 
             {/* Animated Text Overlays */}
-            <div className="fixed inset-0 pointer-events-none z-20">
-                {/* Section 1: Hero Text */}
-                <div
-                    className="absolute inset-0 flex items-center justify-center transition-opacity duration-700"
-                    style={{
-                        opacity: Math.max(0, 1 - (document.documentElement.scrollTop / (window.innerHeight * 0.5)))
-                    }}
-                >
-                    <div className="text-center text-white px-8">
-                        <h1 className="text-4xl md:text-9xl font-bold mb-6 drop-shadow-2xl animate-fade-in">
-                            Scroll Through
-                        </h1>
-                        <p className="text-2xl md:text-5xl font-light drop-shadow-xl animate-fade-in-delay">
-                            The Future
-                        </p>
+            {isMounted && (
+                <div className="fixed inset-0 pointer-events-none z-20">
+                    {/* Section 1: Hero Text */}
+                    <div
+                        className="absolute inset-0 flex items-center justify-center transition-opacity duration-700"
+                        style={{
+                            opacity: Math.max(0, 1 - (scrollY / (window.innerHeight * 0.5)))
+                        }}
+                    >
+                        <div className="text-center text-white px-8">
+                            <h1 className="text-4xl md:text-9xl font-bold mb-6 drop-shadow-2xl animate-fade-in">
+                                Scroll Through
+                            </h1>
+                            <p className="text-2xl md:text-5xl font-light drop-shadow-xl animate-fade-in-delay">
+                                The Future
+                            </p>
+                        </div>
                     </div>
-                </div>
 
-                {/* Section 2: Mid Scroll */}
-                <div
-                    className="absolute inset-0 flex items-center justify-center transition-opacity duration-700"
-                    style={{
-                        opacity: (() => {
-                            const scroll = document.documentElement.scrollTop;
-                            const start = window.innerHeight * 0.8;
-                            const end = window.innerHeight * 2;
-                            if (scroll < start) return 0;
-                            if (scroll > end) return 0;
-                            return Math.min(1, (scroll - start) / (window.innerHeight * 0.3));
-                        })()
-                    }}
-                >
-                    <div className="text-center text-white px-8">
-                        <h2 className="text-6xl md:text-8xl font-bold mb-4 drop-shadow-2xl">
-                            Experience
-                        </h2>
-                        <p className="text-2xl md:text-4xl font-light drop-shadow-xl">
-                            Seamless Animation
-                        </p>
+                    {/* Section 2: Mid Scroll */}
+                    <div
+                        className="absolute inset-0 flex items-center justify-center transition-opacity duration-700"
+                        style={{
+                            opacity: (() => {
+                                const start = window.innerHeight * 0.8;
+                                const end = window.innerHeight * 2;
+                                if (scrollY < start) return 0;
+                                if (scrollY > end) return 0;
+                                return Math.min(1, (scrollY - start) / (window.innerHeight * 0.3));
+                            })()
+                        }}
+                    >
+                        <div className="text-center text-white px-8">
+                            <h2 className="text-6xl md:text-8xl font-bold mb-4 drop-shadow-2xl">
+                                Experience
+                            </h2>
+                            <p className="text-2xl md:text-4xl font-light drop-shadow-xl">
+                                Seamless Animation
+                            </p>
+                        </div>
                     </div>
-                </div>
 
-                {/* Section 3: Final */}
-                <div
-                    className="absolute inset-0 flex items-center justify-center transition-opacity duration-700"
-                    style={{
-                        opacity: (() => {
-                            const scroll = document.documentElement.scrollTop;
-                            const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-                            const start = maxScroll * 0.6;
-                            if (scroll < start) return 0;
-                            return Math.min(1, (scroll - start) / (window.innerHeight * 0.5));
-                        })()
-                    }}
-                >
-                    <div className="text-center text-white px-8">
-                        <h2 className="text-6xl md:text-8xl font-bold mb-4 drop-shadow-2xl">
-                            Welcome to
-                        </h2>
-                        <p className="text-3xl md:text-5xl font-light drop-shadow-xl">
-                            The New Era
-                        </p>
+                    {/* Section 3: Final */}
+                    <div
+                        className="absolute inset-0 flex items-center justify-center transition-opacity duration-700"
+                        style={{
+                            opacity: (() => {
+                                const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+                                const start = maxScroll * 0.6;
+                                if (scrollY < start) return 0;
+                                return Math.min(1, (scrollY - start) / (window.innerHeight * 0.5));
+                            })()
+                        }}
+                    >
+                        <div className="text-center text-white px-8">
+                            <h2 className="text-6xl md:text-8xl font-bold mb-4 drop-shadow-2xl">
+                                Welcome to
+                            </h2>
+                            <p className="text-3xl md:text-5xl font-light drop-shadow-xl">
+                                The New Era
+                            </p>
+                        </div>
                     </div>
                 </div>
-            </div>
+            )}
 
             <div style={{ height: '500vh' }} className="relative z-10" />
         </div>
