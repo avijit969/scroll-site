@@ -263,7 +263,7 @@ export default function ScrollAnimation() {
       )}
 
       {/* Scroll height container - provides the scrollable area */}
-      <div style={{ height: '800vh' }} className="relative z-10" />
+      <div style={{ height: '400vh' }} className="relative z-10" />
     </div>
   );
 }
