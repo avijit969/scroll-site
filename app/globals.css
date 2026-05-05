@@ -1,8 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #000000;
+  --foreground: #ededed;
+  --accent-blue: #1a5fff;
+  --accent-cyan: #00d4ff;
+  --accent-gold: #d4a843;
+  --glass-bg: rgba(255, 255, 255, 0.06);
+  --glass-border: rgba(255, 255, 255, 0.1);
 }
 
 @theme inline {
@@ -12,23 +17,314 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Inter', 'Geist', Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
 }
 
+/* ======================== */
+/* Loading Screen           */
+/* ======================== */
+.loading-overlay {
+  /* Dark veil so the first-frame background image shows through */
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.loading-logo-container {
+  position: relative;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.aurya-loading-logo {
+  width: 220px !important;
+  height: auto !important;
+  object-fit: contain;
+  animation: logoPulse 2s ease-in-out infinite;
+  filter: drop-shadow(0 0 30px rgba(0, 212, 255, 0.25));
+}
+
+.loading-logo-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 260px;
+  height: 100px;
+  background: radial-gradient(ellipse, rgba(0, 212, 255, 0.12) 0%, transparent 70%);
+  filter: blur(20px);
+  animation: glowPulse 2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.loading-progress-track {
+  width: 280px;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 0 auto 1rem;
+}
+
+.loading-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
+  border-radius: 10px;
+  transition: width 0.3s ease;
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
+}
+
+.loading-progress-text {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 1.5rem;
+}
+
+.loading-dots {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.loading-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-cyan);
+  animation: dotBounce 1.4s ease-in-out infinite;
+}
+
+/* ======================== */
+/* Hero Section             */
+/* ======================== */
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1.5rem;
+  border-radius: 100px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(10px);
+  margin-bottom: 2rem;
+  animation: fadeIn 1s ease-out 0.2s both;
+}
+
+.hero-badge span {
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+}
+
+.hero-title {
+  font-size: clamp(3rem, 10vw, 8rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: #fff;
+  margin-bottom: 1rem;
+  text-shadow:
+    0 0 40px rgba(0, 0, 0, 0.5),
+    0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.hero-subtitle {
+  font-size: clamp(1.2rem, 3vw, 2.5rem);
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.05em;
+  margin-bottom: 3rem;
+  text-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
+}
+
+.scroll-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  animation: fadeIn 1s ease-out 1.5s both;
+}
+
+/* Mouse icon */
+.scroll-mouse {
+  width: 26px;
+  height: 42px;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 13px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 5px;
+}
+
+.scroll-mouse-wheel {
+  width: 4px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 2px;
+  animation: wheelScroll 1.8s ease-in-out infinite;
+}
+
+/* Chevron arrows */
+.scroll-chevrons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.scroll-chevron {
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid rgba(255, 255, 255, 0.6);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.6);
+  transform: rotate(45deg);
+}
+
+.scroll-chevron:nth-child(1) { opacity: 0.3; animation: chevronFade 1.8s ease-in-out infinite 0s; }
+.scroll-chevron:nth-child(2) { opacity: 0.6; animation: chevronFade 1.8s ease-in-out infinite 0.2s; }
+.scroll-chevron:nth-child(3) { opacity: 1;   animation: chevronFade 1.8s ease-in-out infinite 0.4s; }
+
+/* ======================== */
+/* Content Sections         */
+/* ======================== */
+.section-title {
+  font-size: clamp(2.5rem, 7vw, 5.5rem);
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+}
+
+.section-subtitle {
+  font-size: clamp(1.5rem, 4vw, 3rem);
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.75);
+  margin-bottom: 1.5rem;
+  text-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
+}
+
+.section-divider {
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
+  margin: 0 auto 1.5rem;
+  border-radius: 2px;
+}
+
+.section-description {
+  font-size: clamp(0.9rem, 2vw, 1.2rem);
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.5);
+  max-width: 500px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ======================== */
+/* Stats Row                */
+/* ======================== */
+.stats-row {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  margin-top: 2.5rem;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  border-radius: 16px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(15px);
+  min-width: 140px;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(0, 212, 255, 0.3);
+}
+
+.stat-number {
+  font-size: 2rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #fff, var(--accent-cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.25rem;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* ======================== */
+/* Aurya Frame 70 Overlay   */
+/* ======================== */
+.aurya-title {
+  font-size: clamp(2.8rem, 7vw, 6rem);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  background: linear-gradient(135deg, #ffffff 0%, #e8d5a3 50%, var(--accent-gold) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 30px rgba(212, 168, 67, 0.3));
+  margin-bottom: 1rem;
+}
+
+.aurya-divider {
+  width: 80px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+  margin: 0 auto 1rem;
+  border-radius: 2px;
+}
+
+.aurya-tagline {
+  font-size: clamp(0.95rem, 2.2vw, 1.4rem);
+  font-weight: 300;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.75);
+  text-shadow: 0 2px 20px rgba(0,0,0,0.6);
+}
+
+/* ======================== */
+/* Animations               */
+/* ======================== */
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(25px);
   }
   to {
     opacity: 1;
@@ -39,12 +335,67 @@ body {
 @keyframes fadeInDelay {
   0%, 30% {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(25px);
   }
   100% {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+@keyframes logoPulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    opacity: 0.5;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+}
+
+@keyframes dotBounce {
+  0%, 80%, 100% {
+    transform: scale(0.6);
+    opacity: 0.4;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes wheelScroll {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  60% {
+    transform: translateY(12px);
+    opacity: 0;
+  }
+  61% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes chevronFade {
+  0%, 60%, 100% { opacity: 0.2; }
+  30% { opacity: 1; }
 }
 
 .animate-fade-in {
@@ -53,4 +404,66 @@ body {
 
 .animate-fade-in-delay {
   animation: fadeInDelay 1.8s ease-out forwards;
+}
+
+/* ======================== */
+/* Scrollbar                */
+/* ======================== */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* ======================== */
+/* Responsive Adjustments   */
+/* ======================== */
+@media (max-width: 768px) {
+  .stats-row {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .stat-card {
+    padding: 1.25rem 2.5rem;
+    min-width: 200px;
+  }
+
+  .hero-badge {
+    padding: 0.4rem 1rem;
+  }
+
+  .hero-badge span {
+    font-size: 0.7rem;
+  }
+
+  .aurya-loading-logo {
+    width: 160px !important;
+  }
+
+  .aurya-title {
+    font-size: 2.2rem;
+  }
+
+  .aurya-tagline {
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+  }
+
+  .scroll-mouse {
+    width: 22px;
+    height: 36px;
+  }
 }
