@@ -2,7 +2,11 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
+import { Playfair_Display } from 'next/font/google';
 
+const playfair_display = Playfair_Display({
+  subsets: ['latin'], weight: '800'
+});
 // Generate the list of frame filenames (001 to 154)
 const FRAME_START = 1;
 const FRAME_END = 154;
@@ -250,12 +254,24 @@ export default function ScrollAnimation() {
             }}
           >
             <div className="text-center px-8">
-              <h1 className="aurya-title">
+              <h1
+                className={`${playfair_display.className} text-6xl leading-normal tracking-wide mb-4`}
+                style={{
+                  background: 'linear-gradient(135deg, #ffffff 0%, #e8d5a3 50%, #d4a843 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                  filter: 'drop-shadow(0 0 30px rgba(212, 168, 67, 0.3))'
+                }}
+              >
                 Aurya City
               </h1>
               <div className="aurya-divider" />
-              <p className="aurya-tagline">
-                Premium Residential Plots in Dholera
+              <p
+                className="font-medium tracking-[0.18em] uppercase text-white/75 text-md"
+                style={{ textShadow: '0 2px 20px rgba(0, 0, 0, 0.6)' }}
+              >
+                Premium Residential Plots near Dholera
               </p>
             </div>
           </div>
@@ -263,7 +279,7 @@ export default function ScrollAnimation() {
       )}
 
       {/* Scroll height container - provides the scrollable area */}
-      <div style={{ height: '400vh' }} className="relative z-10" />
+      <div style={{ height: '300vh' }} className="relative z-10" />
     </div>
   );
 }
