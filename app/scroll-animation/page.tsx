@@ -2,10 +2,9 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-// Generate the list of frame filenames (009 to 162)
-const FRAME_START = 9;
-const FRAME_END = 162;
-const FRAME_COUNT = FRAME_END - FRAME_START + 1; // 154 frames
+const FRAME_START = 5;
+const FRAME_END = 120;
+const FRAME_COUNT = FRAME_END - FRAME_START + 1;
 
 function getFramePaths(): string[] {
   const paths: string[] = [];
